@@ -73,13 +73,19 @@ public class LoginController extends HttpServlet{
 				user.setId(resultSet.getInt("id"));
 				user.setEmail(resultSet.getString("email"));
 				user.setFullName(resultSet.getString("fullname"));
-				
+				user.setRoleId(resultSet.getInt("role_id"));
 				listUsers.add(user);
 				
 				if(listUsers.isEmpty()) {
 					System.out.println("Dang nhap that bai");
 				}else {
 					System.out.println("Dang nhap thanh cong");
+					
+					Cookie cRole = new Cookie("role", listUsers.get(0).getRoleId() + "");
+					cRole.setMaxAge(8 * 60 * 60);
+					
+					resp.addCookie(cRole);
+					
 					if(remember!=null) {
 						//Tạo cookie có tên là email và giá trị lưu trữ là email người dùng nhập
 						Cookie cEmail = new Cookie("email", email);

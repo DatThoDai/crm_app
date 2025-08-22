@@ -40,4 +40,19 @@ public class UserRepository {
 		return listUsers;
 	}
 	
+	public int deleteById(int id) {
+		int rowCount = 0;
+		String query = "DELETE FROM users u WHERE u.id = ? ";
+		Connection connection = MySQLConfig.getConnection(); 
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			
+			rowCount = statement.executeUpdate();
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return rowCount;
+	}
+	
 }

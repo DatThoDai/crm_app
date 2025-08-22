@@ -33,4 +33,20 @@ public class RoleRepository {
 		}
 		return listRole;
 	}
+	
+	public int addRole(String name, String desc) {
+		int rowCount = 0;
+		String query = "INSERT INTO roles (name, description) VALUES (?, ?)";
+		Connection connection = MySQLConfig.getConnection(); 
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, name);
+			statement.setString(2, desc);
+			
+			rowCount = statement.executeUpdate();
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return rowCount;
+	}
 }

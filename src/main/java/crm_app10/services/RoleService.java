@@ -11,4 +11,8 @@ public class RoleService {
 	public List<Role> findAllRole() {
 		return roleRepository.findAllRole();
 	}
+	
+	public boolean insertRole (String name, String desc) {
+		return roleRepository.addRole(name, desc) > 0;
+	}
 }
