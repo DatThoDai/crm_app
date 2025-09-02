@@ -24,12 +24,9 @@
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
     <link rel="stylesheet" href="./css/custom.css">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    
+	<!-- SweetAlert2 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -129,7 +126,7 @@
                         <h4 class="page-title">Danh sách quyền</h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                        <a href="role-add.html" class="btn btn-sm btn-success">Thêm mới</a>
+                        <a href="role-add" class="btn btn-sm btn-success">Thêm mới</a>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -154,8 +151,9 @@
 												<td>${item.name}</td>
 												<td>${item.description}</td>
 												<td>
-                                                	<a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                                	<a href="#" class="btn btn-sm btn-danger">Xóa</a>
+                                                	<a href="role-edit?id=${item.id}" class="btn btn-sm btn-primary">Sửa</a>
+                                                	<a href="role-delete?id=${item.id}" onclick="confirmDelete(${item.id}, '${item.name}')"
+                                                	class="btn btn-sm btn-danger">Xóa</a>
                                             	</td>
 											</tr>
 										</c:forEach>
@@ -187,10 +185,52 @@
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
+$(document).ready(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const deleteSuccess = urlParams.get('deleteSuccess');
+    const deleteError = urlParams.get('deleteError');
+    
+    if (deleteSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Xóa role thành công!',
+            timer: 2000,
+            showConfirmButton: false
         });
-    </script>
+    }
+    
+    if (deleteError === 'true') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Không thể xóa role này!',
+            confirmButtonText: 'OK'
+        });
+    }
+});
+
+function confirmDelete(id, name) {
+	event.preventDefault();
+    Swal.fire({
+        title: 'Bạn có chắc chắn?',
+        text: "Bạn muốn xóa role '" + name + "'?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Xóa',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'role-delete?id=' + id;
+        }
+    }
+    );
+    
+    return false;
+}
+</script>
 </body>
 
 </html>

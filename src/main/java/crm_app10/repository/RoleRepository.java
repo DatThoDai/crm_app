@@ -49,4 +49,57 @@ public class RoleRepository {
 		}
 		return rowCount;
 	}
+	
+	public boolean deleteRole(int id) {
+		String query = "DELETE FROM roles WHERE id = ? ";
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+
+			int result = statement.executeUpdate();
+			return result > 0;
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	public Role findById(int id) {
+		String query = "SELECT * FROM roles WHERE id = ? ";
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+			if (resultSet.next()) {
+				Role role = new Role();
+				role.setId(resultSet.getInt("id"));
+				role.setName(resultSet.getString("name"));
+				role.setDescription(resultSet.getString("description"));
+				return role;
+			}
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		return null;
+	}
+	
+	public boolean updateRole(int id, String roleName, String description) {
+		String query = "UPDATE roles SET name = ?, description = ? WHERE id = ? ";
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, roleName);
+			statement.setString(2, description);
+			statement.setInt(3, id);
+
+			int result = statement.executeUpdate();
+			return result > 0;
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+			return false;
+		}
+	}
+	
 }

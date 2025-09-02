@@ -21,12 +21,9 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    <!-- SweetAlert2 CDN -->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+	
 </head>
 
 <body>
@@ -123,8 +120,8 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Thêm mới quyền</h4>
-                    </div>
+        				<h4 class="page-title">${pageTitle != null ? pageTitle : 'Thêm mới quyền'}</h4>
+    				</div>
                 </div>
                 <!-- /.row -->
                 <!-- .row -->
@@ -132,24 +129,28 @@
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form action="role-add" method="get" class="form-horizontal form-material">
+                            <form action="${mode == 'edit' ? 'role-edit' : 'role-add'}" method="post" class="form-horizontal form-material" id="roleForm">
+                                <c:if test="${mode == 'edit'}">
+            						<input type="hidden" name="id" value="${role.id}" />
+        						</c:if>
                                 <div class="form-group">
                                     <label class="col-md-12">Tên quyền</label>
                                     <div class="col-md-12">
                                         <input type="text" name="roleName" placeholder="Tên quyền"
-                                            class="form-control form-control-line" />
+                                            class="form-control form-control-line" value="${role != null ? role.name : ''}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Mô tả</label>
                                     <div class="col-md-12">
-                                        <input type="text" name="desc" placeholder="Mô tả" class="form-control form-control-line" />
+                                        <input type="text" name="desc" placeholder="Mô tả" 
+                                        class="form-control form-control-line" value="${role != null ? role.description : ''}"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-success">Add Role</button>
-                                        <a href="role-table.html" class="btn btn-primary">Quay lại</a>
+                                        <button type="submit" class="btn btn-success">${buttonText != null ? buttonText : 'Add Role'}</button>
+                                        <a href="role" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -177,6 +178,46 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+    
+    <!-- SweetAlert2 Script -->
+   <script>
+   	const urlParams = new URLSearchParams(window.location.search);
+   	const success = urlParams.get('success');
+   	const error = urlParams.get('error');
+   	const mode = '${mode}';
+   	if(success == 'true') {
+		Swal.fire({
+			icon : 'success',
+			title : 'Thành công!',
+			text : mode === 'edit' ? 'Cập nhật role thành công!' : 'Role đã được thêm thành công!',
+			timer : 2000,
+			showConfirmButton : false
+		});
+	}
+   	if(error == 'true') {
+   		Swal.fire({
+   			icon : 'error',
+   			title : 'Lỗi!',
+   			text : mode === 'edit' ? 'Có lỗi xảy ra khi cập nhật role!' : 'Có lỗi xảy ra khi thêm role!',
+   			confirmButtonText : 'Ok'
+   		});
+   	}
+	// xử lý form submit 
+	document.getElementById('roleForm').addEventListener('submit', function(event) {
+        const roleName = this.roleName.value.trim();
+        const desc = this.desc.value.trim();
+        if(roleName === '' || desc === '') {
+            event.preventDefault();
+            Swal.fire({
+                icon : 'warning',
+                title : 'Cảnh báo!',
+                text : 'Vui lòng nhập tên quyền!',
+                confirmButtonText : 'Ok'
+            });
+            return;
+        }
+    });
+	</script>
 </body>
 
 </html>
