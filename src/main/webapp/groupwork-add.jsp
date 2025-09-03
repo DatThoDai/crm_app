@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,12 +22,8 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -97,7 +96,7 @@
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
-                        <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="jobs" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                     </li>
                     <li>
@@ -130,29 +129,29 @@
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form class="form-horizontal form-material">
+                            <form action="job-add" method="post" class="form-horizontal form-material" id="jobForm">
                                 <div class="form-group">
                                     <label class="col-md-12">Tên dự án</label>
                                     <div class="col-md-12">
                                         <input type="text" placeholder="Tên công việc"
-                                            class="form-control form-control-line"> </div>
+                                          name="jobName"  class="form-control form-control-line"> </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày bắt đầu</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="dd/MM/yyyy"
-                                            class="form-control form-control-line"> </div>
+                                        <input type="date" placeholder="dd/MM/yyyy"
+                                          name="startDate"  class="form-control form-control-line"> </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày kết thúc</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="dd/MM/yyyy"
-                                            class="form-control form-control-line"> </div>
+                                        <input type="date" placeholder="dd/MM/yyyy"
+                                          name="endDate"  class="form-control form-control-line"> </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <button type="submit" class="btn btn-success">Lưu lại</button>
-                                        <a href="groupwork.html" class="btn btn-primary">Quay lại</a>
+                                        <a href="jobs" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -180,6 +179,38 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+    
+    <script>
+    // Validation form trước khi submit
+    document.getElementById('jobForm').addEventListener('submit', function(event) {
+        const jobName = this.jobName.value.trim();
+        const startDate = this.startDate.value;
+        const endDate = this.endDate.value;
+        
+        if(jobName === '' || startDate === '' || endDate === '') {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh báo!',
+                text: 'Vui lòng điền đầy đủ thông tin!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+        
+        // Kiểm tra ngày kết thúc phải sau ngày bắt đầu
+        if(new Date(endDate) <= new Date(startDate)) {
+            event.preventDefault();
+            Swal.fire({
+                icon: 'warning',
+                title: 'Cảnh báo!',
+                text: 'Ngày kết thúc phải sau ngày bắt đầu!',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+    });
+	</script>
 </body>
 
 </html>

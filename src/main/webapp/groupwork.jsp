@@ -24,12 +24,8 @@
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
     <link rel="stylesheet" href="./css/custom.css">
-    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
+    
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -102,7 +98,7 @@
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
-                        <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="jobs" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                     </li>
                     <li>
@@ -129,7 +125,7 @@
                         <h4 class="page-title">Danh sách dự án</h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                        <a href="groupwork-add.html" class="btn btn-sm btn-success">Thêm mới</a>
+                        <a href="job-add" class="btn btn-sm btn-success">Thêm mới</a>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -190,10 +186,94 @@
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#example').DataTable();
+$(document).ready(function () {
+    $('#example').DataTable();
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const deleteSuccess = urlParams.get('deleteSuccess');
+    const deleteError = urlParams.get('deleteError');
+    const updateSuccess = urlParams.get('updateSuccess');
+    const updateError = urlParams.get('updateError');
+    const addSuccess = urlParams.get('addSuccess');
+    const addError = urlParams.get('addError');
+    
+    if (deleteSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Xóa dự án thành công!',
+            timer: 2000,
+            showConfirmButton: false
         });
-    </script>
+    }
+    
+    if (deleteError === 'true') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Không thể xóa dự án này!',
+            confirmButtonText: 'OK'
+        });
+    }
+    
+    if (updateSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Cập nhật dự án thành công!',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+    
+    if (updateError === 'true') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Cập nhật dự án thất bại!',
+            confirmButtonText: 'OK'
+        });
+    }
+    
+    if (addSuccess === 'true') {
+        Swal.fire({
+            icon: 'success',
+            title: 'Thành công!',
+            text: 'Thêm dự án thành công!',
+            timer: 2000,
+            showConfirmButton: false
+        }).then(() => {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        });
+    }
+    
+    if (addError === 'true') {
+        Swal.fire({
+            icon: 'error',
+            title: 'Lỗi!',
+            text: 'Thêm dự án thất bại!',
+            confirmButtonText: 'OK'
+        });
+    }
+});
+
+function confirmDeleteJob(id, jobName) {
+    Swal.fire({
+        title: 'Bạn có chắc chắn?',
+        text: `Bạn muốn xóa dự án "${jobName}"?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Có, xóa!',
+        cancelButtonText: 'Hủy'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = 'job-delete?id=' + id;
+        }
+    });
+}
+</script>
 </body>
 
 </html>

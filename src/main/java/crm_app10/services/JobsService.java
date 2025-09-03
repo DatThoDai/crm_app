@@ -11,4 +11,8 @@ public class JobsService {
 	public List<Jobs> findAllJobs() {
 		return jobsRepository.findAllJobs();
 	}
+	
+	public boolean addJob(String name, String startDate, String endDate) {
+		return jobsRepository.addJob(name, startDate, endDate);
+	}
 }
