@@ -152,8 +152,8 @@
 												<td>${item.startDate}</td>
 												<td>${item.endDate}</td>
 												<td>
-                                                	<a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                                	<a href="#" class="btn btn-sm btn-danger">Xóa</a>
+                                                	<a href="job-edit?id=${item.id}" class="btn btn-sm btn-primary">Sửa</a>
+                                                	<a href="job-delete?id=${item.id}" onclick="confirmDeleteJob(${item.id}, '${item.name}')" class="btn btn-sm btn-danger">Xóa</a>
                                                 	<a href="groupwork-details.html" class="btn btn-sm btn-info">Xem</a>
                                             	</td>
 											</tr>
@@ -188,7 +188,7 @@
     <script>
 $(document).ready(function () {
     $('#example').DataTable();
-    
+   	
     const urlParams = new URLSearchParams(window.location.search);
     const deleteSuccess = urlParams.get('deleteSuccess');
     const deleteError = urlParams.get('deleteError');
@@ -258,9 +258,10 @@ $(document).ready(function () {
 });
 
 function confirmDeleteJob(id, jobName) {
-    Swal.fire({
+	event.preventDefault();
+	Swal.fire({
         title: 'Bạn có chắc chắn?',
-        text: `Bạn muốn xóa dự án "${jobName}"?`,
+        text: "Bạn muốn xóa dự án '" + jobName + "'?",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

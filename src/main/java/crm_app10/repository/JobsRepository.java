@@ -34,53 +34,78 @@ public class JobsRepository {
 		
 		return listJobs;
 	}
-//	public boolean addJob(String name,String startDate,String endDate) {
-//		String query = "INSERT INTO jobs (name, start_date, end_date) VALUES (?, ?, ?)";
-//		Connection connection = MySQLConfig.getConnection();
-//		try {
-//			PreparedStatement statement = connection.prepareStatement(query);
-//			statement.setString(1, name);
-//			statement.setDate(2, Date.valueOf(LocalDate.parse(startDate)));
-//			statement.setDate(3, Date.valueOf(LocalDate.parse(endDate)));
-//
-//			int result = statement.executeUpdate();
-//			return result > 0;
-//		} catch (Exception e) {
-//			System.out.println("Error: " + e.getMessage());
-//			return false;
-//		}
-//	}
-	
-	public boolean addJob(String name, String startDate, String endDate) {
-	    String query = "INSERT INTO jobs (name, start_date, end_date) VALUES (?, ?, ?)";
-	    Connection connection = MySQLConfig.getConnection();
-	    
-	    try {
-	        // Debug log
-	        System.out.println("=== DEBUG ADD JOB ===");
-	        System.out.println("Name: " + name);
-	        System.out.println("Start Date: " + startDate);
-	        System.out.println("End Date: " + endDate);
-	        System.out.println("Connection: " + (connection != null ? "OK" : "NULL"));
-	        
-	        PreparedStatement statement = connection.prepareStatement(query);
-	        statement.setString(1, name);
-	        statement.setDate(2, Date.valueOf(LocalDate.parse(startDate)));
-	        statement.setDate(3, Date.valueOf(LocalDate.parse(endDate)));
+	public boolean addJob(String name,String startDate,String endDate) {
+		String query = "INSERT INTO jobs (name, start_date, end_date) VALUES (?, ?, ?)";
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, name);
+			statement.setDate(2, Date.valueOf(LocalDate.parse(startDate)));
+			statement.setDate(3, Date.valueOf(LocalDate.parse(endDate)));
 
-	        System.out.println("Query: " + query);
-	        System.out.println("About to execute...");
-	        
-	        int result = statement.executeUpdate();
-	        
-	        System.out.println("Result: " + result);
-	        System.out.println("=== END DEBUG ===");
-	        
-	        return result > 0;
-	    } catch (Exception e) {
-	        System.out.println("AddJob Error: " + e.getMessage());
-	        e.printStackTrace(); // ✅ Thêm stack trace để xem lỗi chi tiết
-	        return false;
-	    }
+			int result = statement.executeUpdate();
+			return result > 0;
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	public boolean deleteJob(int id) {
+		String query = "DELETE FROM jobs WHERE id = ? ";
+		Connection connection = MySQLConfig.getConnection();
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			int result = statement.executeUpdate();
+			return result > 0;
+		} catch (Exception e) {
+			System.out.println("Error: " + e.getMessage());
+			return false;
+		}
+	}
+	
+	public Jobs findJobById(int id) {
+		Jobs job = null;
+		String query = "SELECT * FROM jobs WHERE id = ? ";
+		Connection connection = MySQLConfig.getConnection();
+
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, id);
+			ResultSet resultSet = statement.executeQuery();
+
+			if (resultSet.next()) {
+				job = new Jobs();
+				job.setId(resultSet.getInt("id"));
+				job.setName(resultSet.getString("name"));
+				job.setStartDate(resultSet.getDate("start_date").toLocalDate());
+				job.setEndDate(resultSet.getDate("end_date").toLocalDate());
+			}
+		} catch (Exception e) {
+			System.out.println("findJobById error: " + e.getMessage());
+		}
+
+		return job;
+	}
+	
+	public boolean updateJob(int id, String name, String startDate, String endDate) {
+		String query = "UPDATE jobs SET name = ?, start_date = ?, end_date = ? WHERE id = ?";
+		Connection connection = MySQLConfig.getConnection();
+
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, name);
+			statement.setDate(2, Date.valueOf(LocalDate.parse(startDate)));
+			statement.setDate(3, Date.valueOf(LocalDate.parse(endDate)));
+			statement.setInt(4, id);
+
+			int result = statement.executeUpdate();
+			return result > 0;
+		} catch (Exception e) {
+			System.out.println("updateJob error: " + e.getMessage());
+			return false;
+		}
 	}
 }

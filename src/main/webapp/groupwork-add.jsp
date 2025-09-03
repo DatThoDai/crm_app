@@ -120,7 +120,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Thêm mới dự án</h4>
+                         <h4 class="page-title">${pageTitle != null ? pageTitle : 'Thêm mới dự án'}</h4>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -129,28 +129,31 @@
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form action="job-add" method="post" class="form-horizontal form-material" id="jobForm">
+                            <form action="${mode == 'edit' ? 'job-edit' : 'job-add'}" method="post" class="form-horizontal form-material" id="jobForm">
+                                <c:if test="${mode == 'edit'}">
+        							<input type="hidden" name="id" value="${job.id}" />
+    							</c:if>
                                 <div class="form-group">
                                     <label class="col-md-12">Tên dự án</label>
                                     <div class="col-md-12">
                                         <input type="text" placeholder="Tên công việc"
-                                          name="jobName"  class="form-control form-control-line"> </div>
+                                          name="jobName" value="${job != null ? job.name : ''}" class="form-control form-control-line"> </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày bắt đầu</label>
                                     <div class="col-md-12">
                                         <input type="date" placeholder="dd/MM/yyyy"
-                                          name="startDate"  class="form-control form-control-line"> </div>
+                                          name="startDate"  class="form-control form-control-line" value="${job != null ? job.startDate : ''}"> </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày kết thúc</label>
                                     <div class="col-md-12">
                                         <input type="date" placeholder="dd/MM/yyyy"
-                                          name="endDate"  class="form-control form-control-line"> </div>
+                                          name="endDate"  class="form-control form-control-line" value="${job != null ? job.endDate : ''}"> </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-success">Lưu lại</button>
+                                        <button type="submit" class="btn btn-success">${buttonText != null ? buttonText : 'Lưu lại'}</button>
                                         <a href="jobs" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
