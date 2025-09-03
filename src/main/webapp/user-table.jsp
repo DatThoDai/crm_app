@@ -24,6 +24,10 @@
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
     <link rel="stylesheet" href="./css/custom.css">
+    
+    <!-- Thêm SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -129,7 +133,7 @@
                         <h4 class="page-title">Danh sách thành viên</h4>
                     </div>
                     <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12 text-right">
-                        <a href="user-add.html" class="btn btn-sm btn-success">Thêm mới</a>
+                        <a href="user-add" class="btn btn-sm btn-success">Thêm mới</a>
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -142,8 +146,7 @@
                                     <thead>
                                         <tr>
                                             <th>STT</th>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
+                                            <th>Full Name</th>
                                             <th>Username</th>
                                             <th>Role</th>
                                             <th>#</th>
@@ -154,12 +157,11 @@
 											<tr>
 												<td>${item.id}</td>
 												<td>${item.fullName}</td>
-												<td></td>
 												<td>${item.email}</td>
 												<td>${item.roleDescription}</td>
 												<td>
                                                 	<a href="#" class="btn btn-sm btn-primary">Sửa</a>
-                                                	<a href="user-delete?id=${item.id}" class="btn btn-sm btn-danger">Xóa</a>
+                                                	<a href="user-delete?id=${item.id}" onclick="confirmDeleteUser(${item.id}, '${item.fullName}')" class="btn btn-sm btn-danger">Xóa</a>
                                                 	<a href="user-details.html" class="btn btn-sm btn-info">Xem</a>
                                             	</td>
 											</tr>
@@ -191,10 +193,54 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+    
+    <!-- JavaScript cho xóa user -->
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
+            
+            // Kiểm tra thông báo từ URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const deleteSuccess = urlParams.get('deleteSuccess');
+            const deleteError = urlParams.get('deleteError');
+            
+            if (deleteSuccess === 'true') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Xóa user thành công!',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+            
+            if (deleteError === 'true') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Không thể xóa user này!',
+                    confirmButtonText: 'OK'
+                });
+            }
         });
+        
+        function confirmDeleteUser(id, fullName) {
+        	event.preventDefault();
+            Swal.fire({
+                title: 'Bạn có chắc chắn?',
+                text: "Bạn muốn xóa user '" + fullName + "'?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = 'user-delete?id=' + id;
+                }
+            });
+        }
     </script>
 </body>
 

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,6 +21,10 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
+    
+    <!-- Thêm SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -130,48 +136,43 @@
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form class="form-horizontal form-material">
+                            <form action="user-add" method="post" class="form-horizontal form-material" id="userForm">
                                 <div class="form-group">
                                     <label class="col-md-12">Full Name</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Johnathan Doe"
-                                            class="form-control form-control-line"> </div>
+                                        <input type="text" name="fullName" placeholder="Nhập họ tên"
+                                            class="form-control form-control-line" required> 
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="example-email" class="col-md-12">Email</label>
                                     <div class="col-md-12">
-                                        <input type="email" placeholder="johnathan@admin.com"
-                                            class="form-control form-control-line" name="example-email"
-                                            id="example-email"> </div>
+                                        <input type="email" name="email" placeholder="nhap@email.com"
+                                            class="form-control form-control-line" required> 
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Password</label>
                                     <div class="col-md-12">
-                                        <input type="password" value="password" class="form-control form-control-line">
+                                        <input type="password" name="password" placeholder="Nhập mật khẩu" 
+                                            class="form-control form-control-line" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-12">Phone No</label>
+                                    <label class="col-md-12">Role</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="123 456 7890"
-                                            class="form-control form-control-line"> </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-sm-12">Select Country</label>
-                                    <div class="col-sm-12">
-                                        <select class="form-control form-control-line">
-                                            <option>London</option>
-                                            <option>India</option>
-                                            <option>Usa</option>
-                                            <option>Canada</option>
-                                            <option>Thailand</option>
+                                        <select name="roleId" class="form-control form-control-line" required>
+                                            <option value="">Chọn quyền</option>
+                                            <option value="1">Admin</option>
+                                            <option value="2">User</option>
+                                            <option value="3">Manager</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
                                         <button type="submit" class="btn btn-success">Add User</button>
-                                        <a href="user-table.html" class="btn btn-primary">Quay lại</a>
+                                        <a href="user" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -199,6 +200,51 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+    
+    <!-- SweetAlert2 Script -->
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const success = urlParams.get('success');
+        const error = urlParams.get('error');
+        
+        if(success === 'true') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Thành công!',
+                text: 'Thêm user thành công!',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        }
+        
+        if(error === 'true') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Lỗi!',
+                text: 'Có lỗi xảy ra khi thêm user!',
+                confirmButtonText: 'OK'
+            });
+        }
+        
+        // Validation form trước khi submit
+        document.getElementById('userForm').addEventListener('submit', function(event) {
+            const fullName = this.fullName.value.trim();
+            const email = this.email.value.trim();
+            const password = this.password.value.trim();
+            const roleId = this.roleId.value;
+            
+            if(fullName === '' || email === '' || password === '' || roleId === '') {
+                event.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Cảnh báo!',
+                    text: 'Vui lòng điền đầy đủ thông tin!',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+        });
+    </script>
 </body>
 
 </html>

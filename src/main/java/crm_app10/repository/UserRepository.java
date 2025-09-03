@@ -55,4 +55,23 @@ public class UserRepository {
 		return rowCount;
 	}
 	
+	public boolean addUser(String email, String password, String fullName, int roleId) {
+		String query = "INSERT INTO users (email, password, fullname, role_id) VALUES (?, ?, ?, ?)";
+		Connection connection = MySQLConfig.getConnection();
+		
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setString(1, email);
+			statement.setString(2, password);
+			statement.setString(3, fullName);
+			statement.setInt(4, roleId);
+			
+			int result = statement.executeUpdate();
+			return result > 0;
+			
+		} catch (Exception e) {
+			System.out.println("addUser error: " + e.getMessage());
+			return false;
+		}
+	}
 }

@@ -33,7 +33,7 @@ public class RoleControllers extends HttpServlet {
 			if (idParam != null) {
 				try {
 					int id = Integer.parseInt(idParam);
-					Role role = roleService.findRoleById(id);
+					Role role = roleService.findRoleById(id); 
 					if (role != null) {
 						req.setAttribute("mode", "edit");
 						req.setAttribute("pageTitle", "Sửa quyền");

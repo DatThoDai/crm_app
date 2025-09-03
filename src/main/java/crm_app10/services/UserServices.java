@@ -13,4 +13,8 @@ public class UserServices {
 	public boolean deleteUser(int id) {
 		return userRepository.deleteById(id) > 0;
 	}
+	
+	public boolean addUser(String email, String password, String fullName, int roleId) {
+		return userRepository.addUser(email, password, fullName, roleId);
+	}
 }
