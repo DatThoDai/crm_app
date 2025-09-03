@@ -74,4 +74,50 @@ public class UserRepository {
 			return false;
 		}
 	}
+	public Users findUserById(int id) {
+	    String query = "SELECT * FROM users WHERE id = ?";
+	    Connection connection = MySQLConfig.getConnection();
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setInt(1, id);
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        if (resultSet.next()) {
+	            Users user = new Users();
+	            user.setId(resultSet.getInt("id"));
+	            user.setEmail(resultSet.getString("email"));
+	            user.setPassword(resultSet.getString("password"));
+	            user.setFullName(resultSet.getString("fullname"));
+	            user.setRoleId(resultSet.getInt("role_id"));
+	            return user;
+	        }
+	    } catch (Exception e) {
+	        System.out.println("findUserById error: " + e.getMessage());
+	    }
+	    
+	    return null;
+	}
+	
+	public boolean updateUser(int id, String email, String password, String fullName, int roleId) {
+	    String query = "UPDATE users SET email = ?, password = ?, fullname = ?, role_id = ? WHERE id = ?";
+	    Connection connection = MySQLConfig.getConnection();
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, email);
+	        statement.setString(2, password);
+	        statement.setString(3, fullName);
+	        statement.setInt(4, roleId);
+	        statement.setInt(5, id);
+	        
+	        int result = statement.executeUpdate();
+	        return result > 0;
+	        
+	    } catch (Exception e) {
+	        System.out.println("updateUser error: " + e.getMessage());
+	        return false;
+	    }
+	}
+	
 }

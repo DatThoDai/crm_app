@@ -98,11 +98,11 @@
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="user-table.html" class="waves-effect"><i class="fa fa-user fa-fw"
+                        <a href="user" class="waves-effect"><i class="fa fa-user fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                     </li>
                     <li>
-                        <a href="role-table.html" class="waves-effect"><i class="fa fa-modx fa-fw"
+                        <a href="role" class="waves-effect"><i class="fa fa-modx fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
@@ -160,7 +160,7 @@
 												<td>${item.email}</td>
 												<td>${item.roleDescription}</td>
 												<td>
-                                                	<a href="#" class="btn btn-sm btn-primary">Sửa</a>
+                                                	<a href="user-edit?id=${item.id}" class="btn btn-sm btn-primary">Sửa</a>
                                                 	<a href="user-delete?id=${item.id}" onclick="confirmDeleteUser(${item.id}, '${item.fullName}')" class="btn btn-sm btn-danger">Xóa</a>
                                                 	<a href="user-details.html" class="btn btn-sm btn-info">Xem</a>
                                             	</td>
@@ -198,12 +198,14 @@
     <script>
         $(document).ready(function () {
             $('#example').DataTable();
-            
-            // Kiểm tra thông báo từ URL parameters
+
             const urlParams = new URLSearchParams(window.location.search);
             const deleteSuccess = urlParams.get('deleteSuccess');
             const deleteError = urlParams.get('deleteError');
-            
+            const updateSuccess = urlParams.get('updateSuccess');
+            const updateError = urlParams.get('updateError'); 
+            const addSuccess = urlParams.get('addSuccess');
+            const addError = urlParams.get('addError');
             if (deleteSuccess === 'true') {
                 Swal.fire({
                     icon: 'success',
@@ -219,6 +221,46 @@
                     icon: 'error',
                     title: 'Lỗi!',
                     text: 'Không thể xóa user này!',
+                    confirmButtonText: 'OK'
+                });
+            }
+            if (updateSuccess === 'true') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Cập nhật user thành công!',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+            
+            if (updateError === 'true') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Cập nhật user thất bại!',
+                    confirmButtonText: 'OK'
+                });
+            }
+            if (addSuccess === 'true') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công!',
+                    text: 'Thêm user thành công!',
+                    timer: 2000,
+                    showConfirmButton: false
+                }).then(() => {
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                });
+            }
+            
+            if (addError === 'true') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Thêm user thất bại!',
                     confirmButtonText: 'OK'
                 });
             }

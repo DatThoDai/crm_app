@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%> 
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +32,7 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 <![endif]-->
+
 </head>
 
 <body>
@@ -95,11 +97,11 @@
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="user-table.html" class="waves-effect"><i class="fa fa-user fa-fw"
+                        <a href="user" class="waves-effect"><i class="fa fa-user fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                     </li>
                     <li>
-                        <a href="role-table.html" class="waves-effect"><i class="fa fa-modx fa-fw"
+                        <a href="role" class="waves-effect"><i class="fa fa-modx fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
@@ -126,36 +128,39 @@
         <div id="page-wrapper">
             <div class="container-fluid">
                 <div class="row bg-title">
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Thêm mới thành viên</h4>
-                    </div>
-                </div>
+    				<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+        				<h4 class="page-title">${pageTitle != null ? pageTitle : 'Thêm mới thành viên'}</h4>
+    				</div>
+				</div>
                 <!-- /.row -->
                 <!-- .row -->
                 <div class="row">
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form action="user-add" method="post" class="form-horizontal form-material" id="userForm">
+                            <form action="${mode == 'edit' ? 'user-edit' : 'user-add'}" method="post" class="form-horizontal form-material" id="userForm">
+                                 <c:if test="${mode == 'edit'}">
+            						<input type="hidden" name="id" value="${user.id}" />
+        						</c:if>
                                 <div class="form-group">
                                     <label class="col-md-12">Full Name</label>
                                     <div class="col-md-12">
                                         <input type="text" name="fullName" placeholder="Nhập họ tên"
-                                            class="form-control form-control-line" required> 
+                                         class="form-control form-control-line" value="${user != null ? user.fullName : ''}" required> 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="example-email" class="col-md-12">Email</label>
                                     <div class="col-md-12">
                                         <input type="email" name="email" placeholder="nhap@email.com"
-                                            class="form-control form-control-line" required> 
+                                            class="form-control form-control-line"  value="${user != null ? user.email : ''}" required> 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Password</label>
                                     <div class="col-md-12">
                                         <input type="password" name="password" placeholder="Nhập mật khẩu" 
-                                            class="form-control form-control-line" required>
+                                            class="form-control form-control-line" value="${user != null ? user.password : ''}" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -163,16 +168,19 @@
                                     <div class="col-md-12">
                                         <select name="roleId" class="form-control form-control-line" required>
                                             <option value="">Chọn quyền</option>
-                                            <option value="1">Admin</option>
-                                            <option value="2">User</option>
-                                            <option value="3">Manager</option>
+                                            <c:forEach var="role" items="${listRoles}">
+                								<option value="${role.id}" 
+                    								${user != null && user.roleId == role.id ? 'selected' : ''}>
+                    								${role.name}
+                								</option>
+            								</c:forEach>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-success">Add User</button>
-                                        <a href="user" class="btn btn-primary">Quay lại</a>
+                                        <button type="submit" class="btn btn-success">${buttonText != null ? buttonText : 'Add User'}</button>
+                						<a href="user" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -203,48 +211,25 @@
     
     <!-- SweetAlert2 Script -->
     <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const success = urlParams.get('success');
-        const error = urlParams.get('error');
+    document.getElementById('userForm').addEventListener('submit', function(event) {
+        const fullName = this.fullName.value.trim();
+        const email = this.email.value.trim();
+        const password = this.password.value.trim();
+        const roleId = this.roleId.value;
         
-        if(success === 'true') {
+        if(fullName === '' || email === '' || password === '' || roleId === '') {
+            event.preventDefault();
             Swal.fire({
-                icon: 'success',
-                title: 'Thành công!',
-                text: 'Thêm user thành công!',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        }
-        
-        if(error === 'true') {
-            Swal.fire({
-                icon: 'error',
-                title: 'Lỗi!',
-                text: 'Có lỗi xảy ra khi thêm user!',
+                icon: 'warning',
+                title: 'Cảnh báo!',
+                text: 'Vui lòng điền đầy đủ thông tin!',
                 confirmButtonText: 'OK'
             });
+            return;
         }
+    });
+</script>
         
-        // Validation form trước khi submit
-        document.getElementById('userForm').addEventListener('submit', function(event) {
-            const fullName = this.fullName.value.trim();
-            const email = this.email.value.trim();
-            const password = this.password.value.trim();
-            const roleId = this.roleId.value;
-            
-            if(fullName === '' || email === '' || password === '' || roleId === '') {
-                event.preventDefault();
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Cảnh báo!',
-                    text: 'Vui lòng điền đầy đủ thông tin!',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-        });
-    </script>
 </body>
 
 </html>
