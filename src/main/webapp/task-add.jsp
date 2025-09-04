@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="plugins/images/favicon.png">
-    <title>Pixel Admin</title>
+    <title>${task != null ? 'Sửa' : 'Thêm mới'} công việc</title>
     <!-- Bootstrap Core CSS -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
@@ -19,6 +22,8 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- color CSS -->
     <link href="css/colors/blue-dark.css" id="theme" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -91,19 +96,19 @@
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="user" class="waves-effect"><i class="fa fa-user fa-fw"
+                        <a href="user-table.html" class="waves-effect"><i class="fa fa-user fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                     </li>
                     <li>
-                        <a href="role" class="waves-effect"><i class="fa fa-modx fa-fw"
+                        <a href="role-table.html" class="waves-effect"><i class="fa fa-modx fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
-                        <a href="jobs" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                     </li>
                     <li>
-                        <a href="task.html" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="tasks" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                     </li>
                     <li>
@@ -123,7 +128,7 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">Thêm mới công việc</h4>
+                        <h4 class="page-title">${task != null ? 'Sửa' : 'Thêm mới'} công việc</h4>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -132,52 +137,58 @@
                     <div class="col-md-2 col-12"></div>
                     <div class="col-md-8 col-xs-12">
                         <div class="white-box">
-                            <form class="form-horizontal form-material">
+                            <form class="form-horizontal form-material" action="${task != null ? 'task-edit' : 'task-add'}" method="post">
+                                <c:if test="${task != null}">
+                                    <input type="hidden" name="id" value="${task.id}" />
+                                </c:if>
+                                
                                 <div class="form-group">
                                     <label class="col-md-12">Dự án</label>
                                     <div class="col-md-12">
-                                        <select class="form-control form-control-line">
-                                            <option>Dự án CRM</option>
-                                            <option>Dự án Elearning</option>
-                                            <option>Dự án Rạp chiếu phim</option>
+                                        <select name="jobId" class="form-control form-control-line" required>
+                                            <option value="">Chọn dự án</option>
+                                            <c:forEach var="job" items="${listJobs}">
+                                                <option value="${job.id}" ${task != null && task.jobId == job.id ? 'selected' : ''}>${job.name}</option>
+                                            </c:forEach>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Tên công việc</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Tên công việc"
-                                            class="form-control form-control-line">
+                                        <input type="text" name="taskName" placeholder="Tên công việc"
+                                            class="form-control form-control-line" value="${task != null ? task.name : ''}" required>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Người thực hiện</label>
                                     <div class="col-md-12">
-                                        <select class="form-control form-control-line">
-                                            <option>Nguyễn Văn Tèo</option>
-                                            <option>Trần Thị Lan</option>
-                                            <option>Cao Ngọc Hiếu</option>
+                                        <select name="userId" class="form-control form-control-line" required>
+                                            <option value="">Chọn người thực hiện</option>
+                                            <c:forEach var="user" items="${listUsers}">
+                                                <option value="${user.id}" ${task != null && task.userId == user.id ? 'selected' : ''}>${user.fullName}</option>
+                                            </c:forEach>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày bắt đầu</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="dd/MM/yyyy"
-                                            class="form-control form-control-line"> 
+                                        <input type="date" name="startDate" class="form-control form-control-line" 
+                                               value="${task != null ? task.startDate : ''}" required> 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày kết thúc</label>
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="dd/MM/yyyy"
-                                            class="form-control form-control-line"> 
+                                        <input type="date" name="endDate" class="form-control form-control-line" 
+                                               value="${task != null ? task.endDate : ''}" required> 
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-success">Lưu lại</button>
-                                        <a href="task.html" class="btn btn-primary">Quay lại</a>
+                                        <button type="submit" class="btn btn-success">${task != null ? 'Cập nhật' : 'Lưu lại'}</button>
+                                        <a href="tasks" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>
                             </form>
@@ -205,6 +216,27 @@
     <script src="js/waves.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
+    
+    <script>
+        // Validation form đơn giản
+        $('form').on('submit', function(e) {
+            var taskName = $('input[name="taskName"]').val().trim();
+            var jobId = $('select[name="jobId"]').val();
+            var userId = $('select[name="userId"]').val();
+            var startDate = $('input[name="startDate"]').val();
+            var endDate = $('input[name="endDate"]').val();
+            
+            if (!taskName || !jobId || !userId || !startDate || !endDate) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Thiếu thông tin!',
+                    text: 'Vui lòng điền đầy đủ thông tin!',
+                    confirmButtonText: 'OK'
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
