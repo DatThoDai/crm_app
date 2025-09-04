@@ -65,7 +65,7 @@
                             </a>
                             <ul class="dropdown-menu dropdown-user animated flipInY">
                                 <li>
-                                    <a href="#">
+                                    <a href="profile">
                                         <i class="ti-user"></i> Thông tin cá nhân</a>
                                 </li>
                                 <li>

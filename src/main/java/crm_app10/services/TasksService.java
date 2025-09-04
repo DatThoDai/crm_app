@@ -33,4 +33,12 @@ public class TasksService {
 	public Map<String, Integer> getTaskStatistics() {
 		return tasksRepository.getTaskStatistics();
 	}
+	
+	public List<Tasks> findTasksByUserId(int userId) {
+		return tasksRepository.findTasksByUserId(userId);
+	}
+	
+	public Map<String, Integer> getUserTaskStatistics(int userId) {
+		return tasksRepository.getUserTaskStatistics(userId);
+	}
 }

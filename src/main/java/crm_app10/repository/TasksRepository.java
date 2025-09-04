@@ -174,4 +174,82 @@ public class TasksRepository {
 		
 		return stats;
 	}
+	
+	public List<Tasks> findTasksByUserId(int userId) {
+		List<Tasks> listTasks = new ArrayList<>();
+		String query = """
+			SELECT t.id, t.name, t.start_date, t.end_date, 
+			       t.user_id, t.job_id, t.status_id,
+			       u.fullname as user_name, 
+			       j.name as job_name, 
+			       s.name as status_name
+			FROM tasks t
+			JOIN users u ON t.user_id = u.id
+			JOIN jobs j ON t.job_id = j.id
+			JOIN status s ON t.status_id = s.id
+			WHERE t.user_id = ?
+			ORDER BY t.start_date DESC
+		""";
+		
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, userId);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while (resultSet.next()) {
+				Tasks task = new Tasks();
+				task.setId(resultSet.getInt("id"));
+				task.setName(resultSet.getString("name"));
+				task.setStartDate(resultSet.getDate("start_date").toLocalDate());
+				task.setEndDate(resultSet.getDate("end_date").toLocalDate());
+				task.setUserId(resultSet.getInt("user_id"));
+				task.setJobId(resultSet.getInt("job_id"));
+				task.setStatusId(resultSet.getInt("status_id"));
+				task.setUserName(resultSet.getString("user_name"));
+				task.setJobName(resultSet.getString("job_name"));
+				task.setStatusName(resultSet.getString("status_name"));
+				listTasks.add(task);
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		
+		return listTasks;
+	}
+	
+	public Map<String, Integer> getUserTaskStatistics(int userId) {
+		Map<String, Integer> stats = new HashMap<>();
+		String query = """
+			SELECT 
+				COUNT(*) as total,
+				SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as pending,
+				SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as inProgress,
+				SUM(CASE WHEN status_id = 3 THEN 1 ELSE 0 END) as completed
+			FROM tasks
+			WHERE user_id = ?
+		""";
+		
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, userId);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				stats.put("total", resultSet.getInt("total"));
+				stats.put("pending", resultSet.getInt("pending"));
+				stats.put("inProgress", resultSet.getInt("inProgress"));
+				stats.put("completed", resultSet.getInt("completed"));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			stats.put("total", 0);
+			stats.put("pending", 0);
+			stats.put("inProgress", 0);
+			stats.put("completed", 0);
+		}
+		
+		return stats;
+	}
 }
