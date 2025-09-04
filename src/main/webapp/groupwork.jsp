@@ -41,7 +41,7 @@
                         <i class="fa fa-bars"></i>
                     </a>
                     <div class="top-left-part">
-                        <a class="logo" href="index.html">
+                        <a class="logo" href="dashboard">
                             <b>
                                 <img src="plugins/images/pixeladmin-logo.png" alt="home" />
                             </b>
@@ -61,19 +61,26 @@
                         </li>
                     </ul>
                     <ul class="nav navbar-top-links navbar-right pull-right">
-                        <li>
-                            <div class="dropdown">
-                                <a class="profile-pic dropdown-toggle" data-toggle="dropdown" href="#"> 
-                                    <img src="plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle" />
-                                    <b class="hidden-xs">Cybersoft</b> 
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="profile.html">Thông tin cá nhân</a></li>
-                                    <li><a href="#">Thống kê công việc</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Đăng xuất</a></li>
-                                </ul>
-                            </div>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> 
+                                <img src="plugins/images/users/varun.jpg" alt="user-img" width="36" class="img-circle">
+                                <b class="hidden-xs">Cybersoft</b> 
+                            </a>
+                            <ul class="dropdown-menu dropdown-user animated flipInY">
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-user"></i> Thông tin cá nhân</a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <i class="ti-wallet"></i> Thống kê công việc</a>
+                                </li>
+                                <li role="separator" class="divider"></li>
+                                <li>
+                                    <a href="#">
+                                        <i class="fa fa-power-off"></i> Đăng xuất</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
@@ -86,7 +93,7 @@
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="index.html" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                        <a href="dashboard" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>

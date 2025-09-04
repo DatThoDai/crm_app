@@ -46,7 +46,7 @@
                     <i class="fa fa-bars"></i>
                 </a>
                 <div class="top-left-part">
-                    <a class="logo" href="index.html">
+                    <a class="logo" href="dashboard">
                         <b>
                             <img src="plugins/images/pixeladmin-logo.png" alt="home" />
                         </b>
@@ -92,7 +92,7 @@
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="index.html" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                        <a href="dashboard" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
@@ -172,6 +172,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label class="col-md-12">Trạng thái</label>
+                                    <div class="col-md-12">
+                                        <select name="statusId" class="form-control form-control-line" required>
+                                            <c:forEach var="status" items="${listStatus}">
+                                                <option value="${status.id}" ${task != null && task.statusId == status.id ? 'selected' : (task == null && status.id == 1 ? 'selected' : '')}>${status.name}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label class="col-md-12">Ngày bắt đầu</label>
                                     <div class="col-md-12">
                                         <input type="date" name="startDate" class="form-control form-control-line" 
@@ -223,10 +233,11 @@
             var taskName = $('input[name="taskName"]').val().trim();
             var jobId = $('select[name="jobId"]').val();
             var userId = $('select[name="userId"]').val();
+            var statusId = $('select[name="statusId"]').val();
             var startDate = $('input[name="startDate"]').val();
             var endDate = $('input[name="endDate"]').val();
             
-            if (!taskName || !jobId || !userId || !startDate || !endDate) {
+            if (!taskName || !jobId || !userId || !statusId || !startDate || !endDate) {
                 e.preventDefault();
                 Swal.fire({
                     icon: 'warning',

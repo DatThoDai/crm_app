@@ -1,6 +1,8 @@
 package crm_app10.services;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import crm_app10.repository.TasksRepository;
 import entity.Tasks;
@@ -12,8 +14,8 @@ public class TasksService {
 		return tasksRepository.findAllTasks();
 	}
 
-	public boolean addTask(String name, String startDate, String endDate, int userId, int jobId) {
-		return tasksRepository.addTask(name, startDate, endDate, userId, jobId);
+	public boolean addTask(String name, String startDate, String endDate, int userId, int jobId, int statusId) {
+		return tasksRepository.addTask(name, startDate, endDate, userId, jobId, statusId);
 	}
 
 	public boolean deleteTask(int id) {
@@ -24,7 +26,11 @@ public class TasksService {
 		return tasksRepository.findTaskById(id);
 	}
 
-	public boolean updateTask(int id, String name, String startDate, String endDate, int userId, int jobId) {
-		return tasksRepository.updateTask(id, name, startDate, endDate, userId, jobId);
+	public boolean updateTask(int id, String name, String startDate, String endDate, int userId, int jobId, int statusId) {
+		return tasksRepository.updateTask(id, name, startDate, endDate, userId, jobId, statusId);
+	}
+	
+	public Map<String, Integer> getTaskStatistics() {
+		return tasksRepository.getTaskStatistics();
 	}
 }

@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import config.MySQLConfig;
 import entity.Tasks;
@@ -54,8 +56,8 @@ public class TasksRepository {
 		return listTasks;
 	}
 
-	public boolean addTask(String name, String startDate, String endDate, int userId, int jobId) {
-		String query = "INSERT INTO tasks(name, start_date, end_date, user_id, job_id, status_id) VALUES(?, ?, ?, ?, ?, 1)";
+	public boolean addTask(String name, String startDate, String endDate, int userId, int jobId, int statusId) {
+		String query = "INSERT INTO tasks(name, start_date, end_date, user_id, job_id, status_id) VALUES(?, ?, ?, ?, ?, ?)";
 		
 		Connection connection = MySQLConfig.getConnection();
 		try {
@@ -65,6 +67,7 @@ public class TasksRepository {
 			statement.setDate(3, Date.valueOf(endDate));
 			statement.setInt(4, userId);
 			statement.setInt(5, jobId);
+			statement.setInt(6, statusId);
 			
 			return statement.executeUpdate() > 0;
 		} catch (SQLException e) {
@@ -116,8 +119,8 @@ public class TasksRepository {
 		return null;
 	}
 
-	public boolean updateTask(int id, String name, String startDate, String endDate, int userId, int jobId) {
-		String query = "UPDATE tasks SET name = ?, start_date = ?, end_date = ?, user_id = ?, job_id = ? WHERE id = ?";
+	public boolean updateTask(int id, String name, String startDate, String endDate, int userId, int jobId, int statusId) {
+		String query = "UPDATE tasks SET name = ?, start_date = ?, end_date = ?, user_id = ?, job_id = ?, status_id = ? WHERE id = ?";
 		
 		Connection connection = MySQLConfig.getConnection();
 		try {
@@ -127,7 +130,8 @@ public class TasksRepository {
 			statement.setDate(3, Date.valueOf(endDate));
 			statement.setInt(4, userId);
 			statement.setInt(5, jobId);
-			statement.setInt(6, id);
+			statement.setInt(6, statusId);
+			statement.setInt(7, id);
 			
 			return statement.executeUpdate() > 0;
 		} catch (SQLException e) {
@@ -135,5 +139,39 @@ public class TasksRepository {
 		}
 		
 		return false;
+	}
+	
+	public Map<String, Integer> getTaskStatistics() {
+		Map<String, Integer> stats = new HashMap<>();
+		String query = """
+			SELECT 
+				COUNT(*) as total,
+				SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) as pending,
+				SUM(CASE WHEN status_id = 2 THEN 1 ELSE 0 END) as inProgress,
+				SUM(CASE WHEN status_id = 3 THEN 1 ELSE 0 END) as completed
+			FROM tasks
+		""";
+		
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			ResultSet resultSet = statement.executeQuery();
+			
+			if (resultSet.next()) {
+				stats.put("total", resultSet.getInt("total"));
+				stats.put("pending", resultSet.getInt("pending"));
+				stats.put("inProgress", resultSet.getInt("inProgress"));
+				stats.put("completed", resultSet.getInt("completed"));
+			}
+		} catch (SQLException e) {
+			System.out.println("Error: " + e.getMessage());
+			// Trả về giá trị mặc định nếu lỗi
+			stats.put("total", 0);
+			stats.put("pending", 0);
+			stats.put("inProgress", 0);
+			stats.put("completed", 0);
+		}
+		
+		return stats;
 	}
 }

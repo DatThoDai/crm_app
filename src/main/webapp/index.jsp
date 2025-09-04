@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="jakarta.tags.core"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +11,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" type="image/png" sizes="16x16" href="../plugins/images/favicon.png">
-    <title>Pixel Admin</title>
+    <title>CRM Dashboard</title>
     <!-- Bootstrap Core CSS -->
     <link href="bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Menu CSS -->
@@ -45,7 +48,7 @@
                     <i class="fa fa-bars"></i>
                 </a>
                 <div class="top-left-part">
-                    <a class="logo" href="index.html">
+                    <a class="logo" href="dashboard">
                         <b>
                             <img src="plugins/images/pixeladmin-logo.png" alt="home" />
                         </b>
@@ -90,7 +93,7 @@
             <div class="sidebar-nav navbar-collapse slimscrollsidebar">
                 <ul class="nav" id="side-menu">
                     <li style="padding: 10px 0 0;">
-                        <a href="index.html" class="waves-effect"><i class="fa fa-clock-o fa-fw"
+                        <a href="dashboard" class="waves-effect"><i class="fa fa-clock-o fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
@@ -102,7 +105,7 @@
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
-                        <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="jobs" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                     </li>
                     <li>
@@ -142,13 +145,13 @@
                                 <h5 class="text-muted vb">CHƯA BẮT ĐẦU</h5>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <h3 class="counter text-right m-t-15 text-danger">23</h3>
+                                <h3 class="counter text-right m-t-15 text-danger">${pendingTasks}</h3>
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="40"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span
-                                            class="sr-only">40% Complete (success)</span> </div>
+                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="${pendingPercent}"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: ${pendingPercent}%"> <span
+                                            class="sr-only">${pendingPercent}% Complete</span> </div>
                                 </div>
                             </div>
                         </div>
@@ -164,13 +167,13 @@
                                 <h5 class="text-muted vb">ĐANG THỰC HIỆN</h5>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <h3 class="counter text-right m-t-15 text-megna">169</h3>
+                                <h3 class="counter text-right m-t-15 text-megna">${inProgressTasks}</h3>
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-megna" role="progressbar" aria-valuenow="40"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span
-                                            class="sr-only">40% Complete (success)</span> </div>
+                                    <div class="progress-bar progress-bar-megna" role="progressbar" aria-valuenow="${inProgressPercent}"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: ${inProgressPercent}%"> <span
+                                            class="sr-only">${inProgressPercent}% Complete</span> </div>
                                 </div>
                             </div>
                         </div>
@@ -186,13 +189,13 @@
                                 <h5 class="text-muted vb">ĐÃ HOÀN THÀNH</h5>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-6">
-                                <h3 class="counter text-right m-t-15 text-primary">157</h3>
+                                <h3 class="counter text-right m-t-15 text-primary">${completedTasks}</h3>
                             </div>
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <div class="progress">
-                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40"
-                                        aria-valuemin="0" aria-valuemax="100" style="width: 40%"> <span
-                                            class="sr-only">40% Complete (success)</span> </div>
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="${completedPercent}"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: ${completedPercent}%"> <span
+                                            class="sr-only">${completedPercent}% Complete</span> </div>
                                 </div>
                             </div>
                         </div>
@@ -200,7 +203,6 @@
                 </div>
                 <!-- /.col -->
             </div>
-            <!-- /.row -->
             <!--row -->
             <div class="row">
                 <div class="col-md-12">
@@ -221,8 +223,6 @@
         </div>
         <!-- /.container-fluid -->
         <footer class="footer text-center"> 2018 &copy; myclass.com </footer>
-    </div>
-    <!-- /#page-wrapper -->
     </div>
     <!-- /#wrapper -->
     <!-- jQuery -->
