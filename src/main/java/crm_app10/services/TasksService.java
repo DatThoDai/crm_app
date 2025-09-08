@@ -1,6 +1,5 @@
 package crm_app10.services;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,5 +39,13 @@ public class TasksService {
 	
 	public Map<String, Integer> getUserTaskStatistics(int userId) {
 		return tasksRepository.getUserTaskStatistics(userId);
+	}
+	
+	public List<Tasks> findTasksByJobId(int jobId) {
+		return tasksRepository.findTasksByJobId(jobId);
+	}
+	
+	public Map<String, Integer> getJobTaskStatistics(int jobId) {
+		return tasksRepository.getJobTaskStatistics(jobId);
 	}
 }

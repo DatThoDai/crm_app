@@ -151,19 +151,19 @@
                                                     <tr>
                                                         <td>${loop.index + 1}</td>
                                                         <td>${task.name != null ? task.name : 'N/A'}</td>
-                                                        <td>${task.jobName != null ? task.jobName : 'N/A'}</td>
+                                                        <td>${task.job != null && task.job.name != null ? task.job.name : 'N/A'}</td>
                                                         <td>${task.startDate != null ? task.startDate : 'N/A'}</td>
                                                         <td>${task.endDate != null ? task.endDate : 'N/A'}</td>
                                                         <td>
                                                             <c:choose>
                                                                 <c:when test="${task.statusId == 1}">
-                                                                    <span class="label label-danger">${task.statusName != null ? task.statusName : 'Chưa bắt đầu'}</span>
+                                                                    <span class="label label-danger">${task.status != null && task.status.name != null ? task.status.name : 'Chưa bắt đầu'}</span>
                                                                 </c:when>
                                                                 <c:when test="${task.statusId == 2}">
-                                                                    <span class="label label-warning">${task.statusName != null ? task.statusName : 'Đang thực hiện'}</span>
+                                                                    <span class="label label-warning">${task.status != null && task.status.name != null ? task.status.name : 'Đang thực hiện'}</span>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <span class="label label-success">${task.statusName != null ? task.statusName : 'Hoàn thành'}</span>
+                                                                    <span class="label label-success">${task.status != null && task.status.name != null ? task.status.name : 'Hoàn thành'}</span>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </td>

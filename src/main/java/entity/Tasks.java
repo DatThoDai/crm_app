@@ -11,10 +11,9 @@ public class Tasks {
 	private int jobId;
 	private int statusId;
 	
-	// Thông tin hiển thị
-	private String userName;
-	private String jobName;
-	private String statusName;
+	private Users user;
+	private Jobs job;
+	private Status status;
 	
 	public int getId() {
 		return id;
@@ -72,28 +71,28 @@ public class Tasks {
 		this.statusId = statusId;
 	}
 	
-	public String getUserName() {
-		return userName;
+	public Users getUser() {
+		return user;
 	}
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUser(Users user) {
+		this.user = user;
 	}
 	
-	public String getJobName() {
-		return jobName;
+	public Jobs getJob() {
+		return job;
 	}
 	
-	public void setJobName(String jobName) {
-		this.jobName = jobName;
+	public void setJob(Jobs job) {
+		this.job = job;
 	}
 	
-	public String getStatusName() {
-		return statusName;
+	public Status getStatus() {
+		return status;
 	}
 	
-	public void setStatusName(String statusName) {
-		this.statusName = statusName;
+	public void setStatus(Status status) {
+		this.status = status;
 	}
 	
 	public Tasks() {

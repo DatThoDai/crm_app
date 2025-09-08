@@ -6,8 +6,7 @@ public class Users {
 	private String password;
 	private String fullName;
 	private String avatar;
-	private int roleId;
-	private String roleDescription;
+	private Role role;
 	public int getId() {
 		return id;
 	}
@@ -39,33 +38,36 @@ public class Users {
 		this.avatar = avatar;
 	}
 	public int getRoleId() {
-		return roleId;
+		return role != null ? role.getId() : 0;
 	}
+	
 	public void setRoleId(int roleId) {
-		this.roleId = roleId;
+		if (role == null) {
+			role = new Role();
+		}
+		role.setId(roleId);
 	}
 	
-	public String getRoleDescription() {
-		return roleDescription;
+	public Role getRole() {
+		return role;
 	}
 	
-	public void setRoleDescription(String roleDescription) {
-		this.roleDescription = roleDescription;
+	public void setRole(Role role) {
+		this.role = role;
 	}
 
 	public Users() {
 
 	}
 
-	public Users(int id, String email, String password, String fullName, String avatar, int roleId,
-			String roleDescription) {
+	public Users(int id, String email, String password, String fullName, String avatar, int roleId) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
 		this.fullName = fullName;
 		this.avatar = avatar;
-		this.roleId = roleId;
-		this.roleDescription = roleDescription;
+		this.role = new Role();
+		this.role.setId(roleId);
 	}
 	
 	

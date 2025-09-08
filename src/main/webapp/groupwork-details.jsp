@@ -234,7 +234,7 @@
                                         <a href="#">
                                             <div class="mail-contnet">
                                                 <h5>${task.name}</h5> 
-                                                <span class="mail-desc">${task.userName}</span> 
+                                                <span class="mail-desc">${task.user != null && task.user.fullName != null ? task.user.fullName : 'N/A'}</span> 
                                                 <span class="time">${task.startDate}</span>
                                             </div>
                                         </a>
@@ -257,7 +257,7 @@
                                         <a href="#">
                                             <div class="mail-contnet">
                                                 <h5>${task.name}</h5> 
-                                                <span class="mail-desc">${task.userName}</span> 
+                                                <span class="mail-desc">${task.user != null && task.user.fullName != null ? task.user.fullName : 'N/A'}</span> 
                                                 <span class="time">${task.startDate}</span>
                                             </div>
                                         </a>
@@ -280,7 +280,7 @@
                                         <a href="#">
                                             <div class="mail-contnet">
                                                 <h5>${task.name}</h5> 
-                                                <span class="mail-desc">${task.userName}</span> 
+                                                <span class="mail-desc">${task.user != null && task.user.fullName != null ? task.user.fullName : 'N/A'}</span> 
                                                 <span class="time">${task.endDate}</span>
                                             </div>
                                         </a>

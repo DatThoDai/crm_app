@@ -8,6 +8,7 @@ import java.util.List;
 
 import config.MySQLConfig;
 import entity.Users;
+import entity.Role;
 
 public class UserRepository {
 	/*
@@ -31,7 +32,14 @@ public class UserRepository {
 				user.setFullName(resultSet.getString("fullname"));
 				user.setEmail(resultSet.getString("email"));
 				user.setId(resultSet.getInt("id"));
-				user.setRoleDescription(resultSet.getString("description"));
+				
+				// Tạo đối tượng Role
+				Role role = new Role();
+				role.setId(resultSet.getInt("role_id"));
+				role.setName(resultSet.getString("name"));
+				role.setDescription(resultSet.getString("description"));
+				user.setRole(role);
+				
 				listUsers.add(user);
 			}
 		} catch (Exception e) {

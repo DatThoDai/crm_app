@@ -2,19 +2,23 @@ package crm_app10.controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import crm_app10.services.JobsService;
+import crm_app10.services.TasksService;
 import entity.Jobs;
+import entity.Tasks;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "JobsController", urlPatterns = { "/jobs", "/job-add", "/job-delete", "/job-edit" })
+@WebServlet(name = "JobsController", urlPatterns = { "/jobs", "/job-add", "/job-delete", "/job-edit", "/job-details" })
 public class JobsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private JobsService jobsService = new JobsService();
+	private TasksService tasksService = new TasksService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -46,7 +50,38 @@ public class JobsController extends HttpServlet {
 			} else {
 				resp.sendRedirect("jobs");
 			}
-		}else if (path.equals("/job-edit")) {
+		} else if (path.equals("/job-details")) {
+			String idParam = req.getParameter("id");
+			if (idParam != null) {
+				try {
+					int jobId = Integer.parseInt(idParam);
+					Jobs job = jobsService.findJobById(jobId);
+					
+					if (job != null) {
+						// Lấy danh sách tasks của dự án
+						List<Tasks> jobTasks = tasksService.findTasksByJobId(jobId);
+						
+						// Tính thống kê tasks cho dự án
+						Map<String, Integer> jobStats = tasksService.getJobTaskStatistics(jobId);
+						
+						req.setAttribute("job", job);
+						req.setAttribute("jobTasks", jobTasks);
+						req.setAttribute("pendingTasks", jobStats.getOrDefault("pending", 0));
+						req.setAttribute("inProgressTasks", jobStats.getOrDefault("inProgress", 0));
+						req.setAttribute("completedTasks", jobStats.getOrDefault("completed", 0));
+						req.setAttribute("totalTasks", jobStats.getOrDefault("total", 0));
+						
+						req.getRequestDispatcher("groupwork-details.jsp").forward(req, resp);
+					} else {
+						resp.sendRedirect("jobs?error=notfound");
+					}
+				} catch (NumberFormatException e) {
+					resp.sendRedirect("jobs?error=invalid");
+				}
+			} else {
+				resp.sendRedirect("jobs");
+			}
+		} else if (path.equals("/job-edit")) {
 	        String idParam = req.getParameter("id");
 	        if (idParam != null) {
 				try {

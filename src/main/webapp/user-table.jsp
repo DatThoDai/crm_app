@@ -165,7 +165,7 @@
 												<td>${item.id}</td>
 												<td>${item.fullName}</td>
 												<td>${item.email}</td>
-												<td>${item.roleDescription}</td>
+												<td>${item.role != null && item.role.description != null ? item.role.description : 'N/A'}</td>
 												<td>
                                                 	<a href="user-edit?id=${item.id}" class="btn btn-sm btn-primary">Sửa</a>
                                                 	<a href="user-delete?id=${item.id}" onclick="confirmDeleteUser(${item.id}, '${item.fullName}')" class="btn btn-sm btn-danger">Xóa</a>

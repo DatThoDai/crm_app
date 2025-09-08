@@ -145,20 +145,20 @@
                                             <tr>
                                                 <td>${loop.index + 1}</td>
                                                 <td>${task.name}</td>
-                                                <td>${task.jobName}</td>
-                                                <td>${task.userName}</td>
+                                                <td>${task.job.name}</td>
+                                                <td>${task.user.fullName}</td>
                                                 <td>${task.startDate}</td>
                                                 <td>${task.endDate}</td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${task.statusId == 1}">
-                                                            <span class="label label-danger">${task.statusName}</span>
+                                                            <span class="label label-danger">${task.status.name}</span>
                                                         </c:when>
                                                         <c:when test="${task.statusId == 2}">
-                                                            <span class="label label-warning">${task.statusName}</span>
+                                                            <span class="label label-warning">${task.status.name}</span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="label label-success">${task.statusName}</span>
+                                                            <span class="label label-success">${task.status.name}</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
