@@ -99,6 +99,31 @@ public class UserRepository {
 	    return null;
 	}
 	
+	public Users findUserByEmail(String email) {
+	    String query = "SELECT * FROM users WHERE email = ?";
+	    Connection connection = MySQLConfig.getConnection();
+	    
+	    try {
+	        PreparedStatement statement = connection.prepareStatement(query);
+	        statement.setString(1, email);
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        if (resultSet.next()) {
+	            Users user = new Users();
+	            user.setId(resultSet.getInt("id"));
+	            user.setEmail(resultSet.getString("email"));
+	            user.setPassword(resultSet.getString("password"));
+	            user.setFullName(resultSet.getString("fullname"));
+	            user.setRoleId(resultSet.getInt("role_id"));
+	            return user;
+	        }
+	    } catch (Exception e) {
+	        System.out.println("findUserByEmail error: " + e.getMessage());
+	    }
+	    
+	    return null;
+	}
+	
 	public boolean updateUser(int id, String email, String password, String fullName, int roleId) {
 	    String query = "UPDATE users SET email = ?, password = ?, fullname = ?, role_id = ? WHERE id = ?";
 	    Connection connection = MySQLConfig.getConnection();

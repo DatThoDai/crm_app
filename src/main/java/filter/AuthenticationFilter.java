@@ -30,10 +30,8 @@ public class AuthenticationFilter implements Filter{
 			}
 		}
 		if (isLogined) {
-			//cho đi tiếp
 			chain.doFilter(request, response);
 		}else {
-			// chuyển hướng về trang login
 			resp.sendRedirect(req.getContextPath()+"/login");
 		}
 	}

@@ -13,6 +13,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
 
 @WebServlet(name = "ProfileController", urlPatterns = { "/profile" })
 public class ProfileController extends HttpServlet {
@@ -23,15 +24,36 @@ public class ProfileController extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
-			String userIdParam = req.getParameter("id");
-			int userId = 1;
+			Cookie[] cookies = req.getCookies();
+			String userEmail = null;
+			String userRole = null;
 			
-			try {
-				if (userIdParam != null && !userIdParam.isEmpty()) {
-					userId = Integer.parseInt(userIdParam);
+			if (cookies != null) {
+				for (Cookie cookie : cookies) {
+					if (cookie.getName().equals("email")) {
+						userEmail = cookie.getValue();
+					}
+					if (cookie.getName().equals("role")) {
+						userRole = cookie.getValue();
+					}
 				}
-			} catch (NumberFormatException e) {
-				userId = 1;
+			}
+			
+			if (userEmail == null || userEmail.isEmpty()) {
+				resp.sendRedirect("login");
+				return;
+			}
+			
+			Users currentUser = null;
+			int userId = 1;
+			try {
+				currentUser = userService.findUserByEmail(userEmail);
+				if (currentUser != null) {
+					userId = currentUser.getId();
+				}
+			} catch (Exception e) {
+				resp.sendRedirect("login");
+				return;
 			}
 			
 			req.setAttribute("pendingTasks", 0);
@@ -42,12 +64,7 @@ public class ProfileController extends HttpServlet {
 			req.setAttribute("inProgressPercent", 0);
 			req.setAttribute("completedPercent", 0);
 			
-			try {
-				Users user = userService.findUserById(userId);
-				req.setAttribute("user", user);
-			} catch (Exception e) {
-				req.setAttribute("user", null);
-			}
+			req.setAttribute("user", currentUser);
 			
 			try {
 				List<Tasks> userTasks = tasksService.findTasksByUserId(userId);
@@ -78,7 +95,6 @@ public class ProfileController extends HttpServlet {
 			req.getRequestDispatcher("profile.jsp").forward(req, resp);
 			
 		} catch (Exception e) {
-			// Log error and redirect to dashboard
 			e.printStackTrace();
 			resp.sendRedirect("dashboard");
 		}

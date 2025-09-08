@@ -15,6 +15,10 @@ public class UserService {
 	    return userRepository.findUserById(id);
 	}
 	
+	public Users findUserByEmail(String email) {
+	    return userRepository.findUserByEmail(email);
+	}
+	
 	public boolean deleteUser(int id) {
 		return userRepository.deleteById(id) > 0;
 	}

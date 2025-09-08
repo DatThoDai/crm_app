@@ -10,7 +10,6 @@ import config.MySQLConfig;
 import entity.Role;
 
 public class RoleRepository {
-	// lay danh sach role
 	public List<Role> findAllRole() {
 		List<Role> listRole = new ArrayList<Role>();
 

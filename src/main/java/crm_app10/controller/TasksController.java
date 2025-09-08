@@ -77,7 +77,6 @@ public class TasksController extends HttpServlet {
 			String jobId = req.getParameter("jobId");
 			String statusId = req.getParameter("statusId");
 			
-			// Nếu không chọn status, mặc định là 1 (Chưa bắt đầu)
 			int statusIdInt = (statusId != null && !statusId.isEmpty()) ? Integer.parseInt(statusId) : 1;
 			
 			boolean isSuccess = tasksService.addTask(taskName, startDate, endDate, 

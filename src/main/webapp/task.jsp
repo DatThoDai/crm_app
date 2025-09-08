@@ -74,7 +74,7 @@
                                 </li>
                                 <li role="separator" class="divider"></li>
                                 <li>
-                                    <a href="#">
+                                    <a href="logout">
                                         <i class="fa fa-power-off"></i> Đăng xuất</a>
                                 </li>
                             </ul>
