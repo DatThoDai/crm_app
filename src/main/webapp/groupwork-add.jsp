@@ -108,7 +108,7 @@
                     </li>
                     <li>
                         <a href="tasks" class="waves-effect"><i class="fa fa-table fa-fw"
-                                aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
+                                aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                     </li>
                     <li>
                         <a href="blank.html" class="waves-effect"><i class="fa fa-columns fa-fw"
@@ -191,7 +191,6 @@
     <script src="js/custom.min.js"></script>
     
     <script>
-    // Validation form trước khi submit
     document.getElementById('jobForm').addEventListener('submit', function(event) {
         const jobName = this.jobName.value.trim();
         const startDate = this.startDate.value;
@@ -208,7 +207,6 @@
             return;
         }
         
-        // Kiểm tra ngày kết thúc phải sau ngày bắt đầu
         if(new Date(endDate) <= new Date(startDate)) {
             event.preventDefault();
             Swal.fire({
