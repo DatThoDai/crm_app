@@ -169,7 +169,7 @@
 												<td>
                                                 	<a href="user-edit?id=${item.id}" class="btn btn-sm btn-primary">Sửa</a>
                                                 	<a href="user-delete?id=${item.id}" onclick="confirmDeleteUser(${item.id}, '${item.fullName}')" class="btn btn-sm btn-danger">Xóa</a>
-                                                	<a href="user-details.html" class="btn btn-sm btn-info">Xem</a>
+                                                	<a href="user-details?id=${item.id}" class="btn btn-sm btn-info">Xem</a>
                                             	</td>
 											</tr>
 										</c:forEach>

@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet(name = "UserController", urlPatterns = { "/user", "/user-delete", "/user-add", "/user-edit" })
+@WebServlet(name = "UserController", urlPatterns = { "/user", "/user-delete", "/user-add", "/user-edit", "/user-details" })
 public class UserController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private UserService userService = new UserService();
@@ -60,6 +60,32 @@ public class UserController extends HttpServlet {
 						req.setAttribute("user", user);
 						req.setAttribute("listRoles", listRoles);
 						req.getRequestDispatcher("user-add.jsp").forward(req, resp);
+					} else {
+						resp.sendRedirect("user?error=notfound");
+					}
+				} catch (NumberFormatException e) {
+					resp.sendRedirect("user");
+				}
+			} else {
+				resp.sendRedirect("user");
+			}
+
+		} else if (servletPath.equals("/user-details")) {
+			String idParam = req.getParameter("id");
+			if (idParam != null) {
+				try {
+					int id = Integer.parseInt(idParam);
+					Users user = userService.findUserById(id);
+					if (user != null) {
+						// Lấy thống kê task của user
+						var userStats = userService.getUserTaskStatistics(id);
+						// Lấy danh sách task của user
+						var userTasks = userService.getTasksByUserId(id);
+						
+						req.setAttribute("user", user);
+						req.setAttribute("userStats", userStats);
+						req.setAttribute("userTasks", userTasks);
+						req.getRequestDispatcher("user-details.jsp").forward(req, resp);
 					} else {
 						resp.sendRedirect("user?error=notfound");
 					}
