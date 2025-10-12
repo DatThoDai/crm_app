@@ -83,6 +83,10 @@ public class LoginController extends HttpServlet{
 				Cookie cRole = new Cookie("role", currentUser.getRoleId() + "");
 				cRole.setMaxAge(8 * 60 * 60);
 				resp.addCookie(cRole);
+
+				Cookie cUserId = new Cookie("user_id", currentUser.getId() + "");
+				cUserId.setMaxAge(8 * 60 * 60);
+				resp.addCookie(cUserId);
 				
 				if(remember != null) {
 					Cookie cPassword = new Cookie("password", password);

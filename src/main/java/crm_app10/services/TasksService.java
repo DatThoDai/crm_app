@@ -29,6 +29,10 @@ public class TasksService {
 		return tasksRepository.updateTask(id, name, startDate, endDate, userId, jobId, statusId);
 	}
 	
+	public boolean updateTaskStatus(int id, int statusId) {
+		return tasksRepository.updateTaskStatus(id, statusId);
+	}
+	
 	public Map<String, Integer> getTaskStatistics() {
 		return tasksRepository.getTaskStatistics();
 	}

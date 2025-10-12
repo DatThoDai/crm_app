@@ -77,9 +77,7 @@ public class UserController extends HttpServlet {
 					int id = Integer.parseInt(idParam);
 					Users user = userService.findUserById(id);
 					if (user != null) {
-						// Lấy thống kê task của user
 						var userStats = userService.getUserTaskStatistics(id);
-						// Lấy danh sách task của user
 						var userTasks = userService.getTasksByUserId(id);
 						
 						req.setAttribute("user", user);

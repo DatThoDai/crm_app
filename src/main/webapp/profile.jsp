@@ -56,7 +56,7 @@
                     <li><a href="user"><i class="fa fa-user fa-fw"></i><span class="hide-menu">Thành viên</span></a></li>
                     <li><a href="role"><i class="fa fa-modx fa-fw"></i><span class="hide-menu">Quyền</span></a></li>
                     <li><a href="jobs"><i class="fa fa-table fa-fw"></i><span class="hide-menu">Dự án</span></a></li>
-                    <li><a href="tasks"><i class="fa fa-table fa-fw"></i><span class="hide-menu">Công việc</span></a></li>
+                    <li><a href="tasks"><i class="fa fa-tasks fa-fw"></i><span class="hide-menu">Công việc</span></a></li>
                 </ul>
             </div>
         </div>

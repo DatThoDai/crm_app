@@ -105,10 +105,10 @@
                     </li>
                     <li>
                         <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
-                                aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
+                                aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                     </li>
                     <li>
-                        <a href="tasks" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="tasks" class="waves-effect"><i class="fa fa-tasks fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Công việc</span></a>
                     </li>
                     <li>
@@ -128,7 +128,12 @@
             <div class="container-fluid">
                 <div class="row bg-title">
                     <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                        <h4 class="page-title">${task != null ? 'Sửa' : 'Thêm mới'} công việc</h4>
+                        <h4 class="page-title">
+                            <c:choose>
+                                <c:when test="${userRole == 'ROLE_MEMBER'}">Cập nhật trạng thái công việc</c:when>
+                                <c:otherwise>${task != null ? 'Sửa' : 'Thêm mới'} công việc</c:otherwise>
+                            </c:choose>
+                        </h4>
                     </div>
                 </div>
                 <!-- /.row -->
@@ -142,33 +147,60 @@
                                     <input type="hidden" name="id" value="${task.id}" />
                                 </c:if>
                                 
+                                <!-- Dự án - MEMBER chỉ xem -->
                                 <div class="form-group">
                                     <label class="col-md-12">Dự án</label>
                                     <div class="col-md-12">
-                                        <select name="jobId" class="form-control form-control-line" required>
-                                            <option value="">Chọn dự án</option>
-                                            <c:forEach var="job" items="${listJobs}">
-                                                <option value="${job.id}" ${task != null && task.jobId == job.id ? 'selected' : ''}>${job.name}</option>
-                                            </c:forEach>
-                                        </select>
+                                        <c:choose>
+                                            <c:when test="${userRole == 'ROLE_MEMBER'}">
+                                                <input type="text" class="form-control form-control-line" 
+                                                       value="${task.job.name}" readonly style="background-color: #f5f5f5;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="jobId" class="form-control form-control-line" required>
+                                                    <option value="">Chọn dự án</option>
+                                                    <c:forEach var="job" items="${listJobs}">
+                                                        <option value="${job.id}" ${task != null && task.jobId == job.id ? 'selected' : ''}>${job.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
+                                <!-- Tên công việc - MEMBER chỉ xem -->
                                 <div class="form-group">
                                     <label class="col-md-12">Tên công việc</label>
                                     <div class="col-md-12">
-                                        <input type="text" name="taskName" placeholder="Tên công việc"
-                                            class="form-control form-control-line" value="${task != null ? task.name : ''}" required>
+                                        <c:choose>
+                                            <c:when test="${userRole == 'ROLE_MEMBER'}">
+                                                <input type="text" class="form-control form-control-line" 
+                                                       value="${task.name}" readonly style="background-color: #f5f5f5;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="text" name="taskName" placeholder="Tên công việc"
+                                                    class="form-control form-control-line" value="${task != null ? task.name : ''}" required>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
+                                <!-- Người thực hiện - MEMBER chỉ xem -->
                                 <div class="form-group">
                                     <label class="col-md-12">Người thực hiện</label>
                                     <div class="col-md-12">
-                                        <select name="userId" class="form-control form-control-line" required>
-                                            <option value="">Chọn người thực hiện</option>
-                                            <c:forEach var="user" items="${listUsers}">
-                                                <option value="${user.id}" ${task != null && task.userId == user.id ? 'selected' : ''}>${user.fullName}</option>
-                                            </c:forEach>
-                                        </select>
+                                        <c:choose>
+                                            <c:when test="${userRole == 'ROLE_MEMBER'}">
+                                                <input type="text" class="form-control form-control-line" 
+                                                       value="${task.user.fullName}" readonly style="background-color: #f5f5f5;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <select name="userId" class="form-control form-control-line" required>
+                                                    <option value="">Chọn người thực hiện</option>
+                                                    <c:forEach var="user" items="${listUsers}">
+                                                        <option value="${user.id}" ${task != null && task.userId == user.id ? 'selected' : ''}>${user.fullName}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -181,23 +213,47 @@
                                         </select>
                                     </div>
                                 </div>
+                                <!-- Ngày bắt đầu - MEMBER chỉ xem -->
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày bắt đầu</label>
                                     <div class="col-md-12">
-                                        <input type="date" name="startDate" class="form-control form-control-line" 
-                                               value="${task != null ? task.startDate : ''}" required> 
+                                        <c:choose>
+                                            <c:when test="${userRole == 'ROLE_MEMBER'}">
+                                                <input type="text" class="form-control form-control-line" 
+                                                       value="${task.startDate}" readonly style="background-color: #f5f5f5;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="date" name="startDate" class="form-control form-control-line" 
+                                                       value="${task != null ? task.startDate : ''}" required>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
+                                
+                                <!-- Ngày kết thúc - MEMBER chỉ xem -->
                                 <div class="form-group">
                                     <label class="col-md-12">Ngày kết thúc</label>
                                     <div class="col-md-12">
-                                        <input type="date" name="endDate" class="form-control form-control-line" 
-                                               value="${task != null ? task.endDate : ''}" required> 
+                                        <c:choose>
+                                            <c:when test="${userRole == 'ROLE_MEMBER'}">
+                                                <input type="text" class="form-control form-control-line" 
+                                                       value="${task.endDate}" readonly style="background-color: #f5f5f5;">
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="date" name="endDate" class="form-control form-control-line" 
+                                                       value="${task != null ? task.endDate : ''}" required>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-success">${task != null ? 'Cập nhật' : 'Lưu lại'}</button>
+                                        <button type="submit" class="btn btn-success">
+                                            <c:choose>
+                                                <c:when test="${userRole == 'ROLE_MEMBER'}">Cập nhật trạng thái</c:when>
+                                                <c:otherwise>${task != null ? 'Cập nhật' : 'Lưu lại'}</c:otherwise>
+                                            </c:choose>
+                                        </button>
                                         <a href="tasks" class="btn btn-primary">Quay lại</a>
                                     </div>
                                 </div>

@@ -108,7 +108,18 @@ public class TasksRepository {
 	}
 
 	public Tasks findTaskById(int id) {
-		String query = "SELECT * FROM tasks WHERE id = ?";
+		String query = """
+			SELECT t.id, t.name, t.start_date, t.end_date, 
+			       t.user_id, t.job_id, t.status_id,
+			       u.fullname as user_name, 
+			       j.name as job_name, 
+			       s.name as status_name
+			FROM tasks t
+			JOIN users u ON t.user_id = u.id
+			JOIN jobs j ON t.job_id = j.id
+			JOIN status s ON t.status_id = s.id
+			WHERE t.id = ?
+		""";
 		
 		Connection connection = MySQLConfig.getConnection();
 		try {
@@ -125,6 +136,22 @@ public class TasksRepository {
 				task.setUserId(resultSet.getInt("user_id"));
 				task.setJobId(resultSet.getInt("job_id"));
 				task.setStatusId(resultSet.getInt("status_id"));
+				
+				Users user = new Users();
+				user.setId(resultSet.getInt("user_id"));
+				user.setFullName(resultSet.getString("user_name"));
+				task.setUser(user);
+
+				Jobs job = new Jobs();
+				job.setId(resultSet.getInt("job_id"));
+				job.setName(resultSet.getString("job_name"));
+				task.setJob(job);
+
+				Status status = new Status();
+				status.setId(resultSet.getInt("status_id"));
+				status.setName(resultSet.getString("status_name"));
+				task.setStatus(status);
+				
 				return task;
 			}
 		} catch (SQLException e) {
@@ -151,6 +178,23 @@ public class TasksRepository {
 			return statement.executeUpdate() > 0;
 		} catch (SQLException e) {
 			System.out.println("Error: " + e.getMessage());
+		}
+		
+		return false;
+	}
+	
+	public boolean updateTaskStatus(int id, int statusId) {
+		String query = "UPDATE tasks SET status_id = ? WHERE id = ?";
+		
+		Connection connection = MySQLConfig.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(query);
+			statement.setInt(1, statusId);
+			statement.setInt(2, id);
+			
+			return statement.executeUpdate() > 0;
+		} catch (SQLException e) {
+			System.out.println("Error updating task status: " + e.getMessage());
 		}
 		
 		return false;
