@@ -58,10 +58,8 @@ public class JobsController extends HttpServlet {
 					Jobs job = jobsService.findJobById(jobId);
 					
 					if (job != null) {
-						// Lấy danh sách tasks của dự án
 						List<Tasks> jobTasks = tasksService.findTasksByJobId(jobId);
 						
-						// Tính thống kê tasks cho dự án
 						Map<String, Integer> jobStats = tasksService.getJobTaskStatistics(jobId);
 						
 						req.setAttribute("job", job);

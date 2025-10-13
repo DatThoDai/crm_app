@@ -52,4 +52,17 @@ public class TasksService {
 	public Map<String, Integer> getJobTaskStatistics(int jobId) {
 		return tasksRepository.getJobTaskStatistics(jobId);
 	}
+	
+	public List<Map<String, Object>> getUrgentProjects(int limit) {
+		return tasksRepository.getUrgentProjects(limit);
+	}
+	
+	public List<Map<String, Object>> getUpcomingTasks(int limit) {
+		return tasksRepository.getUpcomingTasks(limit);
+	}
+	
+	public List<Map<String, Object>> getOverloadedUsers(int limit) {
+		return tasksRepository.getOverloadedUsers(limit);
+	}
 }
+

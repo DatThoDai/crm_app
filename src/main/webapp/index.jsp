@@ -205,18 +205,126 @@
             </div>
             <!--row -->
             <div class="row">
-                <div class="col-md-12">
+                <!-- 1. Dự Án Cần Ưu Tiên -->
+                <div class="col-md-4">
                     <div class="white-box">
-                        <h3 class="box-title">Sales Difference</h3>
-                        <ul class="list-inline text-right">
-                            <li>
-                                <h5><i class="fa fa-circle m-r-5" style="color: #dadada;"></i>Site A View</h5>
-                            </li>
-                            <li>
-                                <h5><i class="fa fa-circle m-r-5" style="color: #aec9cb;"></i>Site B View</h5>
-                            </li>
-                        </ul>
-                        <div id="morris-area-chart2" style="height: 370px;"></div>
+                        <h3 class="box-title"><i class="fa fa-exclamation-triangle text-danger m-r-5"></i> Dự Án Cần Ưu Tiên</h3>
+                        <p class="text-muted">Gần deadline và còn nhiều task chưa xong</p>
+                        <div class="table-responsive" style="max-height: 370px; overflow-y: auto;">
+                            <c:forEach var="project" items="${urgentProjects}">
+                                <div class="m-b-20 p-10" style="border-left: 3px solid 
+                                    ${project.daysRemaining <= 3 ? '#f62d51' : project.daysRemaining <= 7 ? '#ffa500' : '#03a9f3'};">
+                                    <div class="row">
+                                        <div class="col-xs-8">
+                                            <h5 class="m-b-0"><strong>${project.name}</strong></h5>
+                                            <small class="text-muted">
+                                                <i class="fa fa-tasks"></i> ${project.incompleteTasks}/${project.totalTasks} chưa xong
+                                            </small>
+                                        </div>
+                                        <div class="col-xs-4 text-right">
+                                            <h4 class="m-t-0 ${project.daysRemaining <= 3 ? 'text-danger' : project.daysRemaining <= 7 ? 'text-warning' : 'text-info'}">
+                                                ${project.daysRemaining}
+                                            </h4>
+                                            <small class="text-muted">ngày</small>
+                                        </div>
+                                    </div>
+                                    <div class="progress m-t-10" style="height: 5px;">
+                                        <div class="progress-bar ${project.daysRemaining <= 3 ? 'progress-bar-danger' : project.daysRemaining <= 7 ? 'progress-bar-warning' : 'progress-bar-info'}" 
+                                             style="width: ${((project.totalTasks - project.incompleteTasks) * 100) / project.totalTasks}%"></div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <c:if test="${empty urgentProjects}">
+                                <div class="text-center text-muted p-20">
+                                    <i class="fa fa-check-circle fa-3x text-success"></i>
+                                    <p class="m-t-10">Tất cả dự án đang trong tầm kiểm soát!</p>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 2. Task Sắp Hết Hạn -->
+                <div class="col-md-4">
+                    <div class="white-box">
+                        <h3 class="box-title"><i class="fa fa-clock-o text-warning m-r-5"></i> Task Sắp Hết Hạn</h3>
+                        <p class="text-muted">Deadline trong 7 ngày tới</p>
+                        <div class="table-responsive" style="max-height: 370px; overflow-y: auto;">
+                            <c:forEach var="task" items="${upcomingTasks}">
+                                <div class="m-b-15 p-b-10" style="border-bottom: 1px solid #e4e7ea;">
+                                    <div class="row">
+                                        <div class="col-xs-9">
+                                            <h5 class="m-b-5 m-t-0"><strong>${task.name}</strong></h5>
+                                            <small class="text-muted">
+                                                <i class="fa fa-user"></i> ${task.userName}
+                                            </small><br/>
+                                            <small class="text-muted">
+                                                <i class="fa fa-folder"></i> ${task.jobName}
+                                            </small>
+                                        </div>
+                                        <div class="col-xs-3 text-right">
+                                            <span class="label ${task.daysRemaining == 0 ? 'label-danger' : task.daysRemaining <= 2 ? 'label-warning' : 'label-info'}">
+                                                <c:choose>
+                                                    <c:when test="${task.daysRemaining == 0}">Hôm nay</c:when>
+                                                    <c:when test="${task.daysRemaining == 1}">Ngày mai</c:when>
+                                                    <c:otherwise>${task.daysRemaining} ngày</c:otherwise>
+                                                </c:choose>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                            <c:if test="${empty upcomingTasks}">
+                                <div class="text-center text-muted p-20">
+                                    <i class="fa fa-calendar-check-o fa-3x text-success"></i>
+                                    <p class="m-t-10">Không có task nào sắp deadline!</p>
+                                </div>
+                            </c:if>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3. Nhân Viên Quá Tải -->
+                <div class="col-md-4">
+                    <div class="white-box">
+                        <h3 class="box-title"><i class="fa fa-user-times text-megna m-r-5"></i> Nhân Viên Quá Tải</h3>
+                        <p class="text-muted">Cần hỗ trợ hoặc phân bổ lại công việc</p>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Nhân Viên</th>
+                                        <th class="text-center">Đang Làm</th>
+                                        <th class="text-center">Chờ</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach var="user" items="${overloadedUsers}">
+                                        <tr>
+                                            <td>
+                                                <strong>${user.fullname}</strong><br/>
+                                                <small class="text-muted">${user.email}</small>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="label ${user.inProgressTasks >= 5 ? 'label-danger' : user.inProgressTasks >= 3 ? 'label-warning' : 'label-info'}">
+                                                    ${user.inProgressTasks}
+                                                </span>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="label label-default">${user.pendingTasks}</span>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                    <c:if test="${empty overloadedUsers}">
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted">
+                                                <i class="fa fa-smile-o"></i> Tất cả nhân viên đều ổn!
+                                            </td>
+                                        </tr>
+                                    </c:if>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -238,13 +346,18 @@
     <!--Counter js -->
     <script src="plugins/bower_components/waypoints/lib/jquery.waypoints.js"></script>
     <script src="plugins/bower_components/counterup/jquery.counterup.min.js"></script>
-    <!--Morris JavaScript -->
-    <script src="plugins/bower_components/raphael/raphael-min.js"></script>
-    <script src="plugins/bower_components/morrisjs/morris.js"></script>
     <!-- Custom Theme JavaScript -->
     <script src="js/custom.min.js"></script>
-    <script src="js/dashboard1.js"></script>
     <script src="plugins/bower_components/toast-master/js/jquery.toast.js"></script>
+    <script>
+        // Counter animation
+        $(document).ready(function() {
+            $(".counter").counterUp({
+                delay: 100,
+                time: 1200
+            });
+        });
+    </script>
 </body>
 
 </html>

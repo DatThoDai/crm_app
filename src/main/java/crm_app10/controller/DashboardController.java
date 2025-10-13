@@ -1,6 +1,7 @@
 package crm_app10.controller;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import crm_app10.services.TasksService;
@@ -39,6 +40,14 @@ public class DashboardController extends HttpServlet {
 			req.setAttribute("inProgressPercent", 0);
 			req.setAttribute("completedPercent", 0);
 		}
+		
+		List<Map<String, Object>> urgentProjects = tasksService.getUrgentProjects(5);
+		List<Map<String, Object>> upcomingTasks = tasksService.getUpcomingTasks(10);
+		List<Map<String, Object>> overloadedUsers = tasksService.getOverloadedUsers(5);
+		
+		req.setAttribute("urgentProjects", urgentProjects);
+		req.setAttribute("upcomingTasks", upcomingTasks);
+		req.setAttribute("overloadedUsers", overloadedUsers);
 		
 		req.getRequestDispatcher("index.jsp").forward(req, resp);
 	}
