@@ -3,6 +3,7 @@ package crm_app10.controller;
 import java.io.IOException;
 import java.util.List;
 
+import crm_app10.services.EmailService;
 import crm_app10.services.JobsService;
 import crm_app10.services.StatusService;
 import crm_app10.services.TasksService;
@@ -25,7 +26,7 @@ public class TasksController extends HttpServlet {
 	private UserService userService = new UserService();
 	private JobsService jobsService = new JobsService();
 	private StatusService statusService = new StatusService();
-
+	private EmailService emailService = new EmailService();
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String path = req.getServletPath();
@@ -105,6 +106,16 @@ public class TasksController extends HttpServlet {
 			boolean isSuccess = tasksService.addTask(taskName, startDate, endDate, 
 				Integer.parseInt(userId), Integer.parseInt(jobId), statusIdInt);
 			if (isSuccess) {
+				try {
+			        Users user = userService.findUserById(Integer.parseInt(userId));
+			        Jobs job = jobsService.findJobById(Integer.parseInt(jobId));
+			        
+			        if (user != null && job != null) {
+			        	emailService.sendTaskNotification(user.getEmail(),user.getFullName(),taskName, job.getName(), endDate);
+			        }
+			    } catch (Exception e) {
+			        System.out.println("Lỗi gửi email: " + e.getMessage());
+			    }
 				resp.sendRedirect("tasks?msg=addSuccess");
 			} else {
 				resp.sendRedirect("tasks?msg=addError");
