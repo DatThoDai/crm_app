@@ -1,5 +1,7 @@
 package crm_app10.repository;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
@@ -10,16 +12,38 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class EmailRepository {
-    private final String email = "ndat04913@gmail.com";
-    private final String password = "wpyy zjfi jhhq cdcc";
+    private final Properties emailConfig;
+    private final String email;
+    private final String password;
+    private final String fromName;
+
+    public EmailRepository() {
+        emailConfig = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("email.properties")) {
+            if (input != null) {
+                emailConfig.load(input);
+                this.email = emailConfig.getProperty("mail.username");
+                this.password = emailConfig.getProperty("mail.password");
+                this.fromName = "Hệ thống CRM";
+                
+                if (this.email == null || this.password == null) {
+                    throw new RuntimeException("Email or password not configured in email.properties");
+                }
+            } else {
+                throw new RuntimeException("email.properties file not found in classpath");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load email configuration: " + e.getMessage(), e);
+        }
+    }
 
     public boolean sendTaskNotification(String toEmail, String employeeName, String taskName, String projectName, String deadline) {
         try {
             Properties props = new Properties();
-            props.put("mail.smtp.host", "smtp.gmail.com");
-            props.put("mail.smtp.port", "587");
-            props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailConfig.getProperty("mail.smtp.host", "smtp.gmail.com"));
+            props.put("mail.smtp.port", emailConfig.getProperty("mail.smtp.port", "587"));
+            props.put("mail.smtp.auth", emailConfig.getProperty("mail.smtp.auth", "true"));
+            props.put("mail.smtp.starttls.enable", emailConfig.getProperty("mail.smtp.starttls.enable", "true"));
 
             Session session = Session.getInstance(props, new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -28,7 +52,7 @@ public class EmailRepository {
             });
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(email, "Hệ thống CRM"));
+            message.setFrom(new InternetAddress(email, fromName, "UTF-8"));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject("🔔 [CRM] Bạn có công việc mới: " + taskName);
 

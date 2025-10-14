@@ -5,8 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import crm_app10.services.TasksService;
+import crm_app10.services.UserService;
+import entity.Users;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,9 +18,26 @@ import jakarta.servlet.http.HttpServletResponse;
 public class DashboardController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private TasksService tasksService = new TasksService();
+	private UserService userService = new UserService();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		// Lấy tên user từ cookie
+		String userName = "Guest";
+		Cookie[] cookies = req.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("email".equals(cookie.getName())) {
+					Users user = userService.findUserByEmail(cookie.getValue());
+					if (user != null) {
+						userName = user.getFullName();
+					}
+					break;
+				}
+			}
+		}
+		req.setAttribute("currentUserName", userName);
 
 		Map<String, Integer> taskStats = tasksService.getTaskStatistics();
 		
