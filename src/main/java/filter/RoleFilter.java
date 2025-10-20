@@ -59,10 +59,16 @@ public class RoleFilter implements Filter {
         String roleName = getRoleName(userRole);
 
         if (path.startsWith("/role-add") || path.startsWith("/role-delete") || path.startsWith("/role-edit") ||
-            path.startsWith("/user-add") || path.startsWith("/user-delete") || path.startsWith("/user-edit") ||
-            path.startsWith("/job-add") || path.startsWith("/job-delete") || path.startsWith("/job-edit")) {
-
+            path.startsWith("/user-add") || path.startsWith("/user-delete") || path.startsWith("/user-edit")) {
             if ("ROLE_ADMIN".equals(roleName)) {
+                filterChain.doFilter(servletRequest, servletResponse);
+            } else {
+                response.sendRedirect(request.getContextPath() + "/404.html");
+            }
+        } 
+        
+        else if (path.startsWith("/job-add") || path.startsWith("/job-delete") || path.startsWith("/job-edit")) {
+            if ("ROLE_ADMIN".equals(roleName) || "ROLE_LEADER".equals(roleName)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             } else {
                 response.sendRedirect(request.getContextPath() + "/404.html");
