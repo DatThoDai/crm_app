@@ -2,6 +2,9 @@
 
 A web-based CRM system for managing company projects and tasks, built with Java Servlet and MySQL.
 
+## Demo Video
+🎥 [Watch Demo on YouTube](https://youtu.be/sI8unI_4CwI)
+
 ## Features
 
 ### Role-based Access Control
@@ -22,8 +25,6 @@ A web-based CRM system for managing company projects and tasks, built with Java 
 - **Frontend:** Bootstrap 5, JavaScript
 - **Database:** MySQL
 - **Email Service:** JavaMail API
-- **Server:** Jetty (Embedded)
-- **Deployment:** Railway Platform
 
 ## Project Structure
 
@@ -47,15 +48,10 @@ src/
 ## Setup & Installation
 
 1. Clone the repository
-2. Configure MySQL database
-3. Set environment variables:
-   - `DATABASE_URL`
-   - `DATABASE_USERNAME`
-   - `DATABASE_PASSWORD`
-   - `MAIL_USERNAME`
-   - `MAIL_PASSWORD`
+2. Configure MySQL database in `MySQLConfig.java`
+3. Set up email configuration in `email.properties`
 4. Build the project: `mvn clean package`
-5. Run the application
+5. Deploy WAR file to Tomcat or run with Eclipse
 
 ## Database Schema
 
@@ -64,14 +60,4 @@ src/
 - **Jobs:** Project information and timelines
 - **Tasks:** Individual tasks and assignments
 - **Status:** Task status tracking
-
-## Environment Variables
-
-```env
-DATABASE_URL=mysql://[username]:[password]@[host]:[port]/[database]
-DATABASE_USERNAME=[username]
-DATABASE_PASSWORD=[password]
-MAIL_USERNAME=[email]
-MAIL_PASSWORD=[app-password]
-```
 

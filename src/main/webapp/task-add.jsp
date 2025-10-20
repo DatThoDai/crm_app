@@ -77,7 +77,7 @@
                                 <li><a href="profile">Thông tin cá nhân</a></li>
                                 <li><a href="#">Thống kê công việc</a></li>
                                 <li class="divider"></li>
-                                <li><a href="#">Đăng xuất</a></li>
+                                <li><a href="logout">Đăng xuất</a></li>
                             </ul>
                         </div>
                     </li>
@@ -96,15 +96,15 @@
                                 aria-hidden="true"></i><span class="hide-menu">Dashboard</span></a>
                     </li>
                     <li>
-                        <a href="user-table.html" class="waves-effect"><i class="fa fa-user fa-fw"
+                        <a href="user" class="waves-effect"><i class="fa fa-user fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Thành viên</span></a>
                     </li>
                     <li>
-                        <a href="role-table.html" class="waves-effect"><i class="fa fa-modx fa-fw"
+                        <a href="role" class="waves-effect"><i class="fa fa-modx fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Quyền</span></a>
                     </li>
                     <li>
-                        <a href="groupwork.html" class="waves-effect"><i class="fa fa-table fa-fw"
+                        <a href="jobs" class="waves-effect"><i class="fa fa-table fa-fw"
                                 aria-hidden="true"></i><span class="hide-menu">Dự án</span></a>
                     </li>
                     <li>
